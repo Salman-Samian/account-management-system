@@ -1,0 +1,26 @@
+[
+        {
+                "transactionId": 1,
+                "accountId": 1,
+                "value": 1000,
+                "transactionDate": "2022-06-24"
+        },
+        {
+                "transactionId": 1,
+                "accountId": 1,
+                "value": 500,
+                "transactionDate": "2022-06-24"
+        },
+        {
+                "transactionId": 1,
+                "accountId": 1,
+                "value": 450,
+                "transactionDate": "2022-06-24"
+        },
+        {
+                "transactionId": 1,
+                "accountId": 1,
+                "value": 45,
+                "transactionDate": "2022-06-24"
+        }
+]
