@@ -1,4 +1,6 @@
 import http from 'http';
+import { depositToAccount } from "./src/controllers"
+import "./src/types"
 
 http.createServer((request, response) => {
     const { headers, method, url } = request;
@@ -31,6 +33,27 @@ http.createServer((request, response) => {
             response.write('<p>Login Page</p>');
             response.write('</body>');
             response.write('</html>');
+            response.end();
+        });
+    } else if (request.method === 'GET' && request.url === '/deposit') {
+        const totalDeposit: number = 1000;
+        const account: Account = {
+            accountId: 1,
+            personId: {
+                personId: 1,
+                birthDate: new Date(),
+                document: "Documents",
+                name: "Salman Samian"
+            },
+            balance: 0,
+            dailyWithdrawaLimit: 2000,
+            activeFlag: false,
+            accountType: 1,
+            createDate: new Date()
+        };
+        depositToAccount(account, totalDeposit).then(res => {
+            response.statusCode = 200;
+            response.write(JSON.stringify(res));
             response.end();
         });
     } else {

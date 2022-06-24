@@ -1,0 +1,44 @@
+[
+        {
+                "accountId": 1,
+                "personId": {
+                        "personId": 1,
+                        "birthDate": "2000-9-19",
+                        "document": "Documents",
+                        "name": "Salman Samian"
+                },
+                "balance": 0,
+                "dailyWithdrawaLimit": 2000,
+                "activeFlag": false,
+                "accountType": 1,
+                "createDate": "2020-01-01"
+        },
+        {
+                "accountId": 2,
+                "personId": {
+                        "personId": 1,
+                        "birthDate": "2000-9-19",
+                        "document": "Documents",
+                        "name": "Salman Samian"
+                },
+                "balance": 0,
+                "dailyWithdrawaLimit": 1000,
+                "activeFlag": false,
+                "accountType": 1,
+                "createDate": "2020-01-01"
+        },
+        {
+                "accountId": 3,
+                "personId": {
+                        "personId": 1,
+                        "birthDate": "2000-9-19",
+                        "document": "Documents",
+                        "name": "Salman Samian"
+                },
+                "balance": 0,
+                "dailyWithdrawaLimit": 1000,
+                "activeFlag": false,
+                "accountType": 1,
+                "createDate": "2020-01-01"
+        }
+]

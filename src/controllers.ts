@@ -1,6 +1,9 @@
 import * as fs from 'fs';
 
 // ● Implement path that performs the creation of an account.
+
+import { readFileDataSource } from "./utils/fileDataSource";
+
 // creatAccount + and create an auto Person 
 export function addAccount(account: Account): Promise<Account> {
     return new Promise((resolve, reject) => {
@@ -29,56 +32,60 @@ export function addAccount(account: Account): Promise<Account> {
 
 // ● Implement path that performs deposit operation on an account.
 //depositToAccount
-export function depositToAccount(account: Account, totalDeposit: any): Promise<StatusMessage> {
-    const yesterday = new Date(-1);
-    const tomorrow = new Date(+1);
+export async function depositToAccount(account: Account, totalDeposit: any): Promise<StatusMessage> {
+    const today = new Date();
 
-    console.log(yesterday);
-    console.log(tomorrow);
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);;
+
     let returnMessage: StatusMessage = {
         message: "",
         code: 0,
         type: false
     };
-    return fetch('../fakeDataBase/ListTransactions.json')
-        .then(res => {
-            const listTransactions = JSON.parse(res.toString());
-            const sum_today_transactions =
-                listTransactions
-                    .filter((x: Transactions) => {
-                        return x.transactionDate.getTime() >= yesterday.getTime() &&
-                            x.transactionDate.getTime() <= tomorrow.getTime();
-                    })
-                    .map((item: Transactions) => item.value)
-                    .reduce((prev: number, next: number) => prev + next);
+    const listTransactions = await readFileDataSource();
+    const sum_today_transactions =
+        listTransactions
+            .filter((x: Transactions) => {
+                return (new Date(x.transactionDate)).getTime() >= yesterday.getTime() &&
+                    (new Date(x.transactionDate)).getTime() <= tomorrow.getTime();
+            })
+            .map((item: Transactions) => item.value)
+            .reduce((prev: number, next: number) => prev + next);
+    const remainDailyDepositValue = account.dailyWithdrawaLimit - sum_today_transactions;
+    if (account.dailyWithdrawaLimit <= remainDailyDepositValue) {
+        // add new Transaction
+        const new_transactions: Transactions = {
+            accountId: account,
+            transactionDate: new Date(),
+            transactionId: listTransactions.length + 1,
+            value: totalDeposit
+        };
+        listTransactions.push(new_transactions);
+        const new_json_file = JSON.stringify(listTransactions);
 
-            if (account.dailyWithdrawaLimit >= sum_today_transactions) {
-                // add new Transaction
-                const new_transactions: Transactions = {
-                    accountId: account,
-                    transactionDate: new Date(),
-                    transactionId: listTransactions.length,
-                    value: totalDeposit
-                };
-                listTransactions.push(new_transactions);
-                const new_json_file = JSON.stringify(listTransactions);
+        try {
+            fs.writeFile('fakeDataBase/ListTransactions.json', new_json_file, 'utf8', function (err_new_json_file) {
+                if (err_new_json_file) {
+                    console.log(err_new_json_file);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
 
-                fs.writeFile('../fakeDataBase/ListTransactions.json', new_json_file, 'utf8', function (err_new_json_file) {
-                    if (err_new_json_file) {
-                        console.log(err_new_json_file);
-                    }
-                });
+        returnMessage.message = `${totalDeposit} value deposited successfully`;
+        returnMessage.type = true;
 
-                returnMessage.message = `${totalDeposit} value deposited successfully`;
-                returnMessage.type = true;
+    } else {
 
-            } else {
-                const remainDailyDepositValue = sum_today_transactions - account.dailyWithdrawaLimit;
-                returnMessage.message = `you reached to your dealy limits and you just have this ${remainDailyDepositValue} left`;
-                returnMessage.type = false;
-            }
-            return returnMessage;
-        });
+        returnMessage.message = `you reached to your dealy limits and you just have this ${remainDailyDepositValue} left`;
+        returnMessage.type = false;
+    }
+    return Promise.resolve(returnMessage);
 }
 
 

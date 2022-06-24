@@ -1,5 +1,8 @@
-import { depositToAccount } from './controllers';
+import { enableFetchMocks } from 'jest-fetch-mock'
+enableFetchMocks();
 
+
+import { depositToAccount } from './controllers';
 
 describe('testing controller file', () => {
 
@@ -10,6 +13,11 @@ describe('testing controller file', () => {
             code: 0,
             type: true
         };
+        const notok_result: StatusMessage = {
+            message: "",
+            code: 0,
+            type: false
+        }
         const account: Account = {
             accountId: 1,
             personId: {
@@ -24,8 +32,9 @@ describe('testing controller file', () => {
             accountType: 1,
             createDate: new Date()
         };
+        expect(depositToAccount(account, totalDeposit)).resolves.toEqual(ok_result);
 
-        expect(depositToAccount(account, totalDeposit)).toBe(ok_result);
+        // expect(1 + 2).toBe(3);
     });
     // export function depositToAccount(account: Account, totalDeposit: any): Promise<StatusMessage> {
 
