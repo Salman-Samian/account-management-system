@@ -7,7 +7,7 @@ import { depositToAccount } from './controllers';
 describe('testing controller file', () => {
 
     test('make deposit to a person account', () => {
-        const totalDeposit: number = 1000;
+        const totalDeposit: number = 5;
         const ok_result: StatusMessage = {
             message: `${totalDeposit} value deposited successfully`,
             code: 0,

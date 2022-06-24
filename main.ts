@@ -36,7 +36,7 @@ http.createServer((request, response) => {
             response.end();
         });
     } else if (request.method === 'GET' && request.url === '/deposit') {
-        const totalDeposit: number = 1000;
+        const totalDeposit: number = 5;
         const account: Account = {
             accountId: 1,
             personId: {

@@ -56,7 +56,8 @@ export async function depositToAccount(account: Account, totalDeposit: any): Pro
             .map((item: Transactions) => item.value)
             .reduce((prev: number, next: number) => prev + next);
     const remainDailyDepositValue = account.dailyWithdrawaLimit - sum_today_transactions;
-    if (account.dailyWithdrawaLimit <= remainDailyDepositValue) {
+    if (account.dailyWithdrawaLimit >= sum_today_transactions &&
+        remainDailyDepositValue >= totalDeposit) {
         // add new Transaction
         const new_transactions: Transactions = {
             accountId: account,
