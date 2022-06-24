@@ -10,7 +10,7 @@ export function addAccount(account: Account): Promise<Account> {
         //map the relationship with the account and send creation script of at least one person.
         const person: Person = {
             personId: 1,
-            birthDate: new Date(1986, 9, 19),
+            birthDate: new Date(2000, 9, 19),
             document: "Documents",
             name: "Salman Samian"
         };
