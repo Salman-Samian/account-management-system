@@ -1,34 +1,5 @@
 import * as fs from 'fs';
 
-// function isDailyWithdrawaLimit(user: User): boolean {
-//     user.balance - user.dailyWithdrawaLimit;
-//     return user.dailyWithdrawaLimit > 0;
-// }
-
-// const p1: User = {
-//     accountId: 1,
-//     personId: 1,
-//     balance: 0,
-//     dailyWithdrawaLimit: 1000,
-//     activeFlag: false,
-//     accountType: 1,
-//     createDate: new Date()
-// };
-// const isPersonAnAdult: Boolean = isAdult(p1);
-
-
-// function getTransactions(): Promise<Transactions[]> {
-//     return fetch('/transactions.json')
-//         // the JSON body is taken from the response
-//         .then(res => res.json())
-//         .then(res => {
-//             // The response has an `any` type, so we need to cast
-//             // it to the `User` type, and return it from the promise
-//             return res as Transactions[]
-//         })
-// }
-
-
 // ● Implement path that performs the creation of an account.
 // creatAccount + and create an auto Person 
 export function addAccount(account: Account): Promise<Account> {
