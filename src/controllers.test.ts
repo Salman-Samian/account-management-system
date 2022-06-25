@@ -9,7 +9,7 @@ describe('testing controller file', () => {
     test('make deposit to a person account', () => {
         const totalDeposit: number = 5;
         const ok_result: StatusMessage = {
-            message: `${totalDeposit} value deposited successfully`,
+            message: `${totalDeposit} value deposit successfully`,
             code: 0,
             type: true
         };
