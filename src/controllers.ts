@@ -1,11 +1,10 @@
-import * as fs from 'fs';
+import { readFileDataSource, writeFileDataSource } from "./utils/fileDataSource";
+import { getDatesRange } from "./utils/dateUtil";
+
 const filePathListTransactions = 'fakeDataBase/ListTransactions.json';
 const filePathListAccounts = 'fakeDataBase/ListAccounts.json';
 
 // ● Implement path that performs the creation of an account.
-
-import { readFileDataSource } from "./utils/fileDataSource";
-
 // creatAccount + and create an auto Person 
 export function addAccount(account: Account): Promise<Account> {
     return new Promise((resolve, reject) => {
@@ -34,36 +33,38 @@ export function addAccount(account: Account): Promise<Account> {
 
 // ● Implement path that performs deposit operation on an account.
 //depositToAccount
-export async function depositToAccount(account: Account, totalDeposit: any): Promise<StatusMessage> {
+export async function depositToAccount(account: Account, totalDeposit: number): Promise<StatusMessage> {
     let returnMessage: StatusMessage = {
         message: "this account does not exists !",
         code: 0,
         type: false
     };
-
     const listAccounts = await readFileDataSource(filePathListAccounts);
     const accountIsExists = listAccounts.filter((x: Account) => x.accountId === account.accountId);
     if (accountIsExists.length == 1) {
-        const today = new Date();
-        const yesterday = new Date();
-        yesterday.setDate(today.getDate() - 1);
-
-        const tomorrow = new Date();
-        tomorrow.setDate(today.getDate() + 1);;
-
-
+        const dateRangefilters = getDatesRange();
         const listTransactions = await readFileDataSource(filePathListTransactions);
-        const sum_today_transactions =
+        const today_transactions =
             listTransactions
                 .filter((x: Transactions) => {
-                    return (new Date(x.transactionDate)).getTime() >= yesterday.getTime() &&
-                        (new Date(x.transactionDate)).getTime() <= tomorrow.getTime();
+                    return (new Date(x.transactionDate)).getTime() >= dateRangefilters.Yesterday.getTime() &&
+                        (new Date(x.transactionDate)).getTime() <= dateRangefilters.Tomorrow.getTime();
                 })
-                .map((item: Transactions) => item.value)
-                .reduce((prev: number, next: number) => prev + next);
+                .map((item: Transactions) => item.value);
+
+        let sum_today_transactions = 0;
+        if (today_transactions.length > 0)
+            sum_today_transactions = today_transactions.reduce((prev: number, next: number) => prev + next);
+
         const remainDailyDepositValue = account.dailyWithdrawaLimit - sum_today_transactions;
         if (account.dailyWithdrawaLimit >= sum_today_transactions &&
             remainDailyDepositValue >= totalDeposit) {
+
+            // update balance account 
+            const indexAccount = listAccounts.findIndex((x: Account) => x.accountId == account.accountId);
+            listAccounts[indexAccount].balance += totalDeposit;
+            account = { ...listAccounts[indexAccount] };
+
             // add new Transaction
             const new_transactions: Transactions = {
                 accountId: account,
@@ -72,27 +73,22 @@ export async function depositToAccount(account: Account, totalDeposit: any): Pro
                 value: totalDeposit
             };
             listTransactions.push(new_transactions);
-            const new_json_file = JSON.stringify(listTransactions);
 
-            try {
-                fs.writeFile('fakeDataBase/ListTransactions.json', new_json_file, 'utf8', function (err_new_json_file) {
-                    if (err_new_json_file) {
-                        console.log(err_new_json_file);
-                    }
-                });
-            } catch (error) {
-                console.log(error);
+            // update Transaction record
+            const resultWriteFile = await writeFileDataSource(filePathListTransactions, JSON.stringify(listTransactions));
+            if (resultWriteFile === "OK") {
+                const resultWriteFileAccount = await writeFileDataSource(filePathListAccounts, JSON.stringify(listAccounts));
+                if (resultWriteFileAccount === "OK") {
+                    returnMessage.message = `${totalDeposit} value deposited successfully`;
+                    returnMessage.type = true;
+                }
             }
-
-            returnMessage.message = `${totalDeposit} value deposited successfully`;
-            returnMessage.type = true;
-
         } else {
-
             returnMessage.message = `you reached to your dealy limits and you just have this ${remainDailyDepositValue} left`;
             returnMessage.type = false;
         }
     }
+    console.log(returnMessage.message);
     return Promise.resolve(returnMessage);
 }
 

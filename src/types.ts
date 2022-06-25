@@ -8,7 +8,7 @@ type Person = {
 type Account = {
     accountId: number;
     personId: Person;
-    balance: any;
+    balance: number;
     dailyWithdrawaLimit: any;
     activeFlag: boolean;
     accountType: number;
@@ -27,3 +27,10 @@ type StatusMessage = {
     code: number,
     type: boolean
 };
+
+
+type DateRangeFilters = {
+    Yesterday: Date,
+    Today: Date,
+    Tomorrow: Date
+}
