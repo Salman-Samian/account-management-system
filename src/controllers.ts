@@ -107,7 +107,7 @@ export async function balanceInquiryByAccount(account: Account): Promise<StatusM
     };
     const listAccounts = await readFileDataSource(filePathListAccounts);
     const indexAccount = listAccounts.findIndex((x: Account) => x.accountId == account.accountId);
-    if (indexAccount > 0) {
+    if (indexAccount >= 0) {
         if (listAccounts[indexAccount].activeFlag) { // acount not blocked        
             const totalBalance = listAccounts[indexAccount].balance;
             returnMessage.message = `the balance is : ${totalBalance}`;

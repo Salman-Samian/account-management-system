@@ -53,7 +53,7 @@ http.createServer((request, response) => {
             response.end();
         });
     } else if (request.method === 'GET' && request.url === '/withdraw') {
-        const totalWithdraw: number = 50;
+        const totalWithdraw: number = 965;
         const account: Account = {
             accountId: 1,
             personId: {
@@ -108,6 +108,7 @@ http.createServer((request, response) => {
             accountType: 1,
             createDate: new Date()
         };
+        console.log("you can check json data with validation here... 'https://jsonformatter.curiousconcept.com/'");
         retrievesTheAccountStatementOfTransactions(account).then(res => {
             response.statusCode = 200;
             response.write(JSON.stringify(res));
@@ -120,3 +121,5 @@ http.createServer((request, response) => {
 }).listen(8080); // Activates this server, listening on port 8080.
 
 console.log("Hello, this is server... 'http://localhost:8080'");
+
+
