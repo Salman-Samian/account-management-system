@@ -115,6 +115,45 @@ export async function balanceInquiryByAccount(account: Account, totalDeposit: nu
 
 // ● Implement path that performs withdrawal operation on an account.
 // withdrawalOperation
+export async function withdrawalOperation(account: Account, totalWithdraw: number): Promise<StatusMessage> {
+    let returnMessage: StatusMessage = {
+        message: "this account does not exists !",
+        code: 0,
+        type: false
+    };
+    const listAccounts = await readFileDataSource(filePathListAccounts);
+    const accountIsExists = listAccounts.filter((x: Account) => x.accountId === account.accountId);
+    if (accountIsExists.length == 1) {
+        const indexAccount = listAccounts.findIndex((x: Account) => x.accountId == account.accountId);
+
+        if (listAccounts[indexAccount].balance >= totalWithdraw) {
+            const listTransactions = await readFileDataSource(filePathListTransactions);
+            listAccounts[indexAccount].balance -= totalWithdraw;
+            // update balance account                 
+            account = { ...listAccounts[indexAccount] };
+            // add new Transaction
+            const new_transactions: Transactions = {
+                accountId: account,
+                transactionDate: new Date(),
+                transactionId: listTransactions.length + 1,
+                value: (totalWithdraw * -1)
+            };
+            listTransactions.push(new_transactions);
+
+            // update Transaction record
+            const resultWriteFile = await writeFileDataSource(filePathListTransactions, JSON.stringify(listTransactions));
+            if (resultWriteFile === "OK") {
+                const resultWriteFileAccount = await writeFileDataSource(filePathListAccounts, JSON.stringify(listAccounts));
+                if (resultWriteFileAccount === "OK") {
+                    returnMessage.message = `${totalWithdraw} value withdraw successfully`;
+                    returnMessage.type = true;
+                }
+            }
+        }
+    }
+    console.log(returnMessage.message);
+    return Promise.resolve(returnMessage);
+}
 
 
 // ● Implement path that performs the blocking of an account.
