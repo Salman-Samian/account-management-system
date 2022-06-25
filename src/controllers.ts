@@ -15,6 +15,12 @@ export function addAccount(account: Account): Promise<Account> {
 
                 //Persons (it is not necessary to perform operations with the person table ) , create the table to
                 //map the relationship with the account and send creation script of at least one person.                
+                const person: Person = {
+                    personId: 1,
+                    birthDate: new Date(2000, 9, 19),
+                    document: "Documents",
+                    name: "Salman Samian"
+                };
                 const new_account = { ...account };
                 if (new_account.personId.personId > 0) {
                     resolve(new_account)
