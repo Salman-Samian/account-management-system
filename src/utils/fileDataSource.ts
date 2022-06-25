@@ -1,11 +1,10 @@
 import * as fs from 'fs';
-const filePath = 'fakeDataBase/ListTransactions.json';
 
-export function readFileDataSource(): Promise<Transactions[]> {
+export function readFileDataSource(filePath: string): Promise<any[]> {
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, (err, fileContent) => {
             var data;
-            if (err) {                
+            if (err) {
                 reject(err);
             } else {
                 data = JSON.parse(fileContent.toString());

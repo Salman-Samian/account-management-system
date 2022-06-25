@@ -16,7 +16,7 @@
         {
                 "accountId": 2,
                 "personId": {
-                        "personId": 1,
+                        "personId": 2,
                         "birthDate": "2000-9-19",
                         "document": "Documents",
                         "name": "Salman Samian"
@@ -30,7 +30,7 @@
         {
                 "accountId": 3,
                 "personId": {
-                        "personId": 1,
+                        "personId": 3,
                         "birthDate": "2000-9-19",
                         "document": "Documents",
                         "name": "Salman Samian"
