@@ -1,5 +1,12 @@
 import http from 'http';
-import { depositToAccount } from "./src/controllers"
+import {
+    depositToAccount,
+    addAccount,
+    balanceInquiryByAccount,
+    performBlockTheAccount,
+    retrievesTheAccountStatementOfTransactions,
+    withdrawalOperation
+} from "./src/controllers"
 import "./src/types"
 
 http.createServer((request, response) => {
@@ -56,6 +63,87 @@ http.createServer((request, response) => {
             response.write(JSON.stringify(res));
             response.end();
         });
+    } else if (request.method === 'GET' && request.url === '/balanceInquiry') {
+        const account: Account = {
+            accountId: 1,
+            personId: {
+                personId: 1,
+                birthDate: new Date(),
+                document: "Documents",
+                name: "Salman Samian"
+            },
+            balance: 0,
+            dailyWithdrawaLimit: 2000,
+            activeFlag: false,
+            accountType: 1,
+            createDate: new Date()
+        };
+        balanceInquiryByAccount(account).then(res => {
+            response.statusCode = 200;
+            response.write(JSON.stringify(res));
+            response.end();
+        });
+    } else if (request.method === 'GET' && request.url === '/withdraw') {
+        const totalWithdraw: number = 50;
+        const account: Account = {
+            accountId: 1,
+            personId: {
+                personId: 1,
+                birthDate: new Date(),
+                document: "Documents",
+                name: "Salman Samian"
+            },
+            balance: 0,
+            dailyWithdrawaLimit: 2000,
+            activeFlag: false,
+            accountType: 1,
+            createDate: new Date()
+        };
+        withdrawalOperation(account, totalWithdraw).then(res => {
+            response.statusCode = 200;
+            response.write(JSON.stringify(res));
+            response.end();
+        });
+    } else if (request.method === 'GET' && request.url === '/blocktheaccount') {
+        const account: Account = {
+            accountId: 1,
+            personId: {
+                personId: 1,
+                birthDate: new Date(),
+                document: "Documents",
+                name: "Salman Samian"
+            },
+            balance: 0,
+            dailyWithdrawaLimit: 2000,
+            activeFlag: false,
+            accountType: 1,
+            createDate: new Date()
+        };
+        performBlockTheAccount(account).then(res => {
+            response.statusCode = 200;
+            response.write(JSON.stringify(res));
+            response.end();
+        });
+    } else if (request.method === 'GET' && request.url === '/accountstatement') {
+        const account: Account = {
+            accountId: 1,
+            personId: {
+                personId: 1,
+                birthDate: new Date(),
+                document: "Documents",
+                name: "Salman Samian"
+            },
+            balance: 0,
+            dailyWithdrawaLimit: 2000,
+            activeFlag: false,
+            accountType: 1,
+            createDate: new Date()
+        };
+        retrievesTheAccountStatementOfTransactions(account).then(res => {
+            response.statusCode = 200;
+            response.write(JSON.stringify(res));
+            response.end();
+        });
     } else {
         response.statusCode = 404;
         response.end();
@@ -63,3 +151,13 @@ http.createServer((request, response) => {
 }).listen(8080); // Activates this server, listening on port 8080.
 
 console.log("Hello, this is server... 'http://localhost:8080'");
+
+
+
+/// Add Account
+// const person: Person = {
+//     personId: 1,
+//     birthDate: new Date(2000, 9, 19),
+//     document: "Documents",
+//     name: "Salman Samian"
+// };
